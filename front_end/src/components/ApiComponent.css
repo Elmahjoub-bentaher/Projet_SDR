@@ -1,0 +1,40 @@
+/* src/components/ApiComponent.css */
+.api-component {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .loading, .error {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+  }
+  
+  .error {
+    color: #d32f2f;
+  }
+  
+  .data-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .data-item {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+  }
+  
+  .data-item h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .data-item p {
+    color: #666;
+    margin-bottom: 0;
+  }
