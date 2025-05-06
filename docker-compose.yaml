@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./front_end
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./front_end:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - backend
+
+  backend:
+    build: ./Back_end
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./Back_end:/app
+      - /app/build            
+      - /app/.gradle 
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/devdb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpass
+      - SPRING_JPA_HIBERNATE_DDL-AUTO=update
+      - SPRING_JPA_SHOW-SQL=true
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:8.0
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=devdb
+      - MYSQL_ROOT_PASSWORD=rootpass
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./Back_end/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=rootpass
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
