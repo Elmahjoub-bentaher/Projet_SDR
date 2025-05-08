@@ -2,12 +2,13 @@ import { useLoaderData, useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 export async function loader({ params }) {
-  const response = await fetch(`http://localhost:8080/api/products/${params.id}`);
+  const response = await fetch(`http://${window.location.hostname}:8080/api/products/${params.id}`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", });
   if (!response.ok) {
     throw new Error('Product not found');
   }
   return response.json();
 }
+
 
 export default function ProductDetails() {
   const product = useLoaderData();
@@ -17,8 +18,8 @@ export default function ProductDetails() {
   const handleDelete = async () => {
     try {
       setLoading(true);
-      await fetch(`http://localhost:8080/api/products/${id}`, {
-        method: 'DELETE'
+      await fetch(`http://${window.location.hostname}:8080/api/products/${id}`, {
+        method: 'DELETE', headers: { "Content-Type": "application/json", }, credentials: "include", 
       });
       // Redirect after deletion (react-router's navigate)
       window.location.href = '/products';

@@ -11,6 +11,7 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+      - COMPOSE_HTTP_TIMEOUT=200
     depends_on:
       - backend
 
@@ -22,42 +23,81 @@ services:
       - ./Back_end:/app
       - /app/build            
       - /app/.gradle 
+    #environment:
+    #  - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/devdb
+    #  - SPRING_DATASOURCE_USERNAME=root
+    #  - SPRING_DATASOURCE_PASSWORD=rootpass
+    #  - SPRING_JPA_HIBERNATE_DDL-AUTO=update
+    #  - SPRING_JPA_SHOW-SQL=true
+    #depends_on:
+    #  mysql:
+    #    condition: service_healthy
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/devdb
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=rootpass
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database-service:5432/devdb  # Updated for PostgreSQL
+      - SPRING_DATASOURCE_USERNAME=postgres                      # Updated for PostgreSQL
+      - SPRING_DATASOURCE_PASSWORD=postgres                      # Updated for PostgreSQL
       - SPRING_JPA_HIBERNATE_DDL-AUTO=update
       - SPRING_JPA_SHOW-SQL=true
+
     depends_on:
-      mysql:
+      database-service:
         condition: service_healthy
 
-  mysql:
-    image: mysql:8.0
+#  mysql:
+#    image: mysql:5.7
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+#      interval: 5s
+#      timeout: 10s
+#      retries: 10
+#    ports:
+#      - "3308:3306"
+#    environment:
+#      - MYSQL_DATABASE=devdb
+#      - MYSQL_ROOT_PASSWORD=rootpass
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#      - ./Back_end/init.sql:/docker-entrypoint-initdb.d/init.sql
+#
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    ports:
+#      - "8081:80"
+#    environment:
+#      - PMA_HOST=mysql
+#      - PMA_USER=root
+#      - PMA_PASSWORD=rootpass
+#    depends_on:
+#      - mysql
+
+  database-service:
+    image: postgres:13  # Use PostgreSQL image
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "pg_isready", "-U", "postgres"]  # Healthcheck for PostgreSQL
       interval: 5s
       timeout: 10s
       retries: 10
     ports:
-      - "3306:3306"
+      - "5433:5432"  # Exposing PostgreSQL port
     environment:
-      - MYSQL_DATABASE=devdb
-      - MYSQL_ROOT_PASSWORD=rootpass
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=postgres  # Default PostgreSQL user
+      - POSTGRES_PASSWORD=postgres  # Default PostgreSQL password
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./Back_end/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data  # Volume for PostgreSQL data
+      - ./database-service/initpg.sql:/docker-entrypoint-initdb.d/init.sql  # Optionally initialize database with a script
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+  pgadmin-service:
+    image: dpage/pgadmin4
     ports:
       - "8081:80"
     environment:
-      - PMA_HOST=mysql
-      - PMA_USER=root
-      - PMA_PASSWORD=rootpass
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
     depends_on:
-      - mysql
+      - database-service
+
 
 volumes:
-  mysql_data:
+#  mysql_data:
+  postgres_data:  # Volume for PostgreSQL data persistence

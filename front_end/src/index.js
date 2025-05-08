@@ -18,7 +18,7 @@ const router = createBrowserRouter([
       { index: true,
         element: <ProductList />,
         loader: async () => {
-          const response = await fetch('http://localhost:8080/api/products');
+          const response = await fetch(`http://${window.location.hostname}:8080/api/products`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", });
           if (!response.ok) throw new Error('Failed to fetch products');
           return response.json();
         }
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
       { path: "",
         element: <ProductList /> , 
         loader: async () => {
-        const response = await fetch('http://localhost:8080/api/products');
+        const response = await fetch(`http://${window.location.hostname}:8080/api/products`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", });
         if (!response.ok) throw new Error('Failed to fetch products');
         return response.json();
         }
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
         path: "products/:id", 
         element: <ProductDetails />,
         loader: ({ params }) => 
-          fetch(`http://localhost:8080/api/products/${params.id}`).then(res => res.json())
+          fetch(`http://${window.location.hostname}:8080/api/products/${params.id}`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }).then(res => res.json())
       }
     ],
   },
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
     path: "products",
     element: <ProductList /> , 
     loader: async () => {
-      const response = await fetch('http://localhost:8080/api/products');
+      const response = await fetch(`http://${window.location.hostname}:8080/api/products`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", });
       if (!response.ok) throw new Error('Failed to fetch products');
       return response.json();
       }
