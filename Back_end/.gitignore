@@ -1,4 +1,5 @@
 .env
+Dockerfile
 HELP.md
 .gradle
 build/
