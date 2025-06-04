@@ -16,4 +16,4 @@ ENV CHOKIDAR_USEPOLLING=true
 ENV WATCHPACK_POLLING=true
 
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

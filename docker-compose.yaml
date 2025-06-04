@@ -71,7 +71,7 @@ services:
 #      - mysql
 
   database-service:
-    image: postgres:13  # Use PostgreSQL image
+    image: postgres:12.15-alpine  # Use PostgreSQL image
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]  # Healthcheck for PostgreSQL
       interval: 5s
