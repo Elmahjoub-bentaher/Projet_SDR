@@ -6,8 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LivraisonRepository extends JpaRepository<Livraison, Long> {
-    // Méthodes custom si besoin :
-//    Optional<Livraison> findByCommandeIdCommande(Long commandeId);
-    List<Livraison> findByNomContaining(String keyword);
-    boolean existsBySiret(String siret);
 }

@@ -21,7 +21,6 @@ public class Livraison {
     private String etatLivraison;
 
     @OneToOne
-    @JoinColumn(name = "commande_id")
+    @JoinColumn(name = "commande_id", nullable = false)
     private Commande commande;
 }
-
