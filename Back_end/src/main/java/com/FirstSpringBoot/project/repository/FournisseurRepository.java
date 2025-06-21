@@ -4,8 +4,11 @@ import com.FirstSpringBoot.project.model.Fournisseur;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface FournisseurRepository extends JpaRepository<Fournisseur, Long> {
-    // Méthodes custom si besoin, par ex. :
-//    Optional<Fournisseur> findBySiret(String siret);
+    // Méthodes personnalisées (optionnelles)
+    List<Fournisseur> findByNomContaining(String keyword);
+    boolean existsBySiret(String siret);
 }
