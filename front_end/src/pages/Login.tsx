@@ -123,8 +123,8 @@ const Login = () => {
             <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
               <p className="font-semibold text-slate-800 mb-2">Comptes de test :</p>
               <div className="space-y-1 text-sm">
-                <p className="text-slate-700"><span className="font-medium">Admin:</span> admin@system.fr / admin123</p>
-                <p className="text-slate-700"><span className="font-medium">User:</span> user@system.fr / user123</p>
+                <p className="text-slate-700"><span className="font-medium">Admin:</span> admin@example.com / adminpassword</p>
+                <p className="text-slate-700"><span className="font-medium">User:</span> standarduser@example.com / standardpassword</p>
               </div>
             </div>
           </div>
