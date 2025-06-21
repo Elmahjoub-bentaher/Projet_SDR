@@ -15,9 +15,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+	
+	private final Dotenv dotenv = Dotenv.load();
 
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -56,7 +61,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
+    /*@Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("*"); // Allow all origins (for development)
@@ -67,5 +72,21 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
+    }*/
+	
+	@Bean
+	public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+		String originFromEnv = dotenv.get("CORS_ALLOWED_ORIGIN", "http://localhost:3000");
+
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowedOrigins(List.of("http://localhost:3000", originFromEnv)); 
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		config.setAllowedHeaders(List.of("*"));
+		config.setAllowCredentials(true); 
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+		return source;
+	}
+
 }

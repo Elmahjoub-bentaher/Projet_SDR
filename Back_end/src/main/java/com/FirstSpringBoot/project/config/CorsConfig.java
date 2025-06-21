@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import io.github.cdimascio.dotenv.Dotenv;
 
-@Configuration
+//@Configuration
 public class CorsConfig {
 
     private final Dotenv dotenv = Dotenv.load();
