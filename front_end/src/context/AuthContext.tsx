@@ -1,10 +1,16 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Utilisateur } from '@/types';
+import { toast } from '@/hooks/use-toast';
+
+// Define Role enum to match backend
+enum Role {
+  ADMIN = 'ADMIN',
+  USER_STANDARD = 'USER_STANDARD'
+}
 
 interface AuthContextType {
   currentUser: Utilisateur | null;
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
@@ -22,60 +28,48 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<Utilisateur | null>(null);
-  const [fetchedUsers, setFetchedUsers] = useState<Utilisateur[]>([]);
-
-
-  // Données d'exemple pour les utilisateurs
-  const users: Utilisateur[] = [
-    {
-      idUtilisateur: 1,
-      nom: "Admin User",
-      email: "admin@system.fr",
-      motDePasse: "admin123",
-      role: "admin"
-    },
-    {
-      idUtilisateur: 2,
-      nom: "User Normal",
-      email: "user@system.fr",
-      motDePasse: "user123",
-      role: "utilisateur"
-    }
-  ];
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Vérifier s'il y a un utilisateur connecté dans le localStorage
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
       setCurrentUser(JSON.parse(savedUser));
     }
-  
-
-    // Chargement des utilisateurs depuis l'API
-    fetch('/api/utilisateur')
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Erreur lors du chargement des utilisateurs');
-        }
-        return res.json();
-      })
-      .then((data: Utilisateur[]) => {
-        setFetchedUsers(data);
-      })
-      .catch(err => {
-        console.error('Échec du chargement des utilisateurs:', err);
-        setFetchedUsers(users); // fallback si l'API échoue
-      });
+    setIsLoading(false);
   }, []);
 
-  const login = (email: string, password: string): boolean => {
-    const user = users.find(u => u.email === email && u.motDePasse === password);
-    if (user) {
-      setCurrentUser(user);
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      return true;
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, motDePasse: password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Temporary user object - should be replaced with actual user data from backend
+        const user: Utilisateur = {
+          idUtilisateur: 0, // Should come from backend
+          nom: email.split('@')[0], // Temporary
+          email,
+          motDePasse: '', // Don't store password
+          role: email.includes('admin') ? Role.ADMIN : Role.USER_STANDARD, // Temporary
+          commandes: []
+        };
+        
+        setCurrentUser(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Login error:', error);
+      return false;
     }
-    return false;
   };
 
   const logout = () => {
@@ -89,9 +83,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       login,
       logout,
       isAuthenticated: !!currentUser,
-      isAdmin: currentUser?.role === 'admin'
+      isAdmin: currentUser?.role === Role.ADMIN
     }}>
-      {children}
+      {!isLoading && children}
     </AuthContext.Provider>
   );
 };

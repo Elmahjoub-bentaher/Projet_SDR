@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Card } from '@/components/ui/card';
@@ -12,23 +11,37 @@ import { Package } from 'lucide-react';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (login(email, password)) {
+    setIsLoading(true);
+    
+    try {
+      const success = await login(email, password);
+      if (success) {
+        toast({
+          title: "Connexion réussie",
+          description: "Vous êtes maintenant connecté.",
+        });
+        navigate('/');
+      } else {
+        toast({
+          title: "Erreur de connexion",
+          description: "Email ou mot de passe incorrect.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
       toast({
-        title: "Connexion réussie",
-        description: "Vous êtes maintenant connecté.",
-      });
-      navigate('/');
-    } else {
-      toast({
-        title: "Erreur de connexion",
-        description: "Email ou mot de passe incorrect.",
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la connexion.",
         variant: "destructive"
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -101,8 +114,9 @@ const Login = () => {
               <Button 
                 type="submit" 
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white h-12 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg font-semibold"
+                disabled={isLoading}
               >
-                Se connecter
+                {isLoading ? "Connexion en cours..." : "Se connecter"}
               </Button>
             </form>
             
