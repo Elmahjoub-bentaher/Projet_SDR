@@ -25,6 +25,7 @@ public class Fournisseur {
     private String conditionsPaiement;
 
     @OneToMany(mappedBy = "fournisseur")
+	@JsonManagedReference(value = "fournisseur-commandes")
     private List<Commande> commandes;
 }
 
