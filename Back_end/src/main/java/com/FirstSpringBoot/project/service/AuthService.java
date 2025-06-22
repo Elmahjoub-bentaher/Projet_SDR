@@ -64,7 +64,7 @@ public class AuthService {
                     user.setEmail(email);
                     user.setMotDePasse(passwordEncoder.encode(motDePasse)); // Encode password
                     user.setRole(role);
-                    user.setCommandes(null); // Or new ArrayList<>();
+                    //user.setCommandes(null); // Or new ArrayList<>();
                     return utilisateurRepository.save(user);
                 });
     }
