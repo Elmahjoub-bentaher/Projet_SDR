@@ -17,6 +17,8 @@ interface DataContextType {
   addFacture: (facture: Omit<Facture, 'idFacture'>) => void;
 }
 
+
+
 const DataContext = createContext<DataContextType | undefined>(undefined);
 export const useData = () => {
   const context = useContext(DataContext);
@@ -35,55 +37,92 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
 
   // API fetch on mount
+  // useEffect(() => {
+  // const fetchData = async () => {
+  //   try {
+  //     const [
+  //       commandesRes,
+  //       fournisseursRes,
+  //       utilisateursRes,
+  //       lignesRes,
+  //       livraisonsRes,
+  //       facturesRes
+  //     ] =C
+  //       fetch(`http://${window.location.hostname}:8080/api/commandes`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
+	// 	fetch(`http://${window.location.hostname}:8080/api/fournisseurs`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
+	// 	fetch(`http://${window.location.hostname}:8080/api/utilisateurs`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
+	// 	fetch(`http://${window.location.hostname}:8080/api/lignes-commande`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
+	// 	fetch(`http://${window.location.hostname}:8080/api/livraisons`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
+	// 	fetch(`http://${window.location.hostname}:8080/api/factures`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", })
+  //     ]);
+
+  //     const [
+  //       commandesData,
+  //       fournisseursData,
+  //       utilisateursData,
+  //       lignesCommandeData,
+  //       livraisonsData,
+  //       facturesData
+  //     ] = await Promise.all([
+  //       commandesRes.json(),
+  //       fournisseursRes.json(),
+  //       utilisateursRes.json(),
+  //       lignesRes.json(),
+  //       livraisonsRes.json(),
+  //       facturesRes.json()
+  //     ]);
+      
+  //     setCommandes(Array.isArray(commandesData) ? commandesData : []);
+	//   setFournisseurs(Array.isArray(fournisseursData) ? fournisseursData : []);
+	//   setUtilisateurs(Array.isArray(utilisateursData) ? utilisateursData : []);
+	//   setLignesCommande(Array.isArray(lignesCommandeData) ? lignesCommandeData : []);
+	//   setLivraisons(Array.isArray(livraisonsData) ? livraisonsData : []);
+	//   setFactures(Array.isArray(facturesData) ? facturesData : []);
+    
+  //   } catch (error) {
+  //     console.error("Erreur lors du chargement des données:", error);
+  //   }
+  // };
+
+  // fetchData();
+  // }, []);
   useEffect(() => {
   const fetchData = async () => {
-    try {
-      const [
-        commandesRes,
-        fournisseursRes,
-        utilisateursRes,
-        lignesRes,
-        livraisonsRes,
-        facturesRes
-      ] = await Promise.all([
-        fetch(`http://${window.location.hostname}:8080/api/commandes`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
-		fetch(`http://${window.location.hostname}:8080/api/fournisseurs`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
-		fetch(`http://${window.location.hostname}:8080/api/utilisateurs`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
-		fetch(`http://${window.location.hostname}:8080/api/lignes-commande`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
-		fetch(`http://${window.location.hostname}:8080/api/livraisons`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
-		fetch(`http://${window.location.hostname}:8080/api/factures`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", })
-      ]);
+    // Define all endpoints and their corresponding state setters
+    const endpoints = [
+      { name: 'commandes', setter: setCommandes },
+      { name: 'fournisseurs', setter: setFournisseurs },
+      { name: 'utilisateurs', setter: setUtilisateurs },
+      { name: 'lignes-commande', setter: setLignesCommande },
+      { name: 'livraisons', setter: setLivraisons },
+      { name: 'factures', setter: setFactures },
+    ];
 
-      const [
-        commandesData,
-        fournisseursData,
-        utilisateursData,
-        lignesCommandeData,
-        livraisonsData,
-        facturesData
-      ] = await Promise.all([
-        commandesRes.json(),
-        fournisseursRes.json(),
-        utilisateursRes.json(),
-        lignesRes.json(),
-        livraisonsRes.json(),
-        facturesRes.json()
-      ]);
+    // Fetch data for each endpoint independently
+    endpoints.forEach(async ({ name, setter }) => {
+      try {
+        const res = await fetch(`http://${window.location.hostname}:8080/api/${name}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        });
 
-      setCommandes(Array.isArray(commandesData) ? commandesData : []);
-	  setFournisseurs(Array.isArray(fournisseursData) ? fournisseursData : []);
-	  setUtilisateurs(Array.isArray(utilisateursData) ? utilisateursData : []);
-	  setLignesCommande(Array.isArray(lignesCommandeData) ? lignesCommandeData : []);
-	  setLivraisons(Array.isArray(livraisonsData) ? livraisonsData : []);
-	  setFactures(Array.isArray(facturesData) ? facturesData : []);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch ${name}: ${res.status}`);
+        }
 
-    } catch (error) {
-      console.error("Erreur lors du chargement des données:", error);
-    }
+        const data = await res.json();
+        setter(Array.isArray(data) ? data : []); // Ensure data is always an array
+        console.log(`${name} data loaded:`, data); // Debug log
+      } catch (error) {
+        console.error(`Error fetching ${name}:`, error);
+        setter([]); // Set empty array on error
+      }
+    });
   };
 
   fetchData();
-  }, []);
+}, []);
 
 
   const addCommande = async (commande: Omit<Commande, 'idCommande'>) => {
