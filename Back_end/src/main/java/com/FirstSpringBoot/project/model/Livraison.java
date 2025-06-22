@@ -20,7 +20,7 @@ public class Livraison {
     private LocalDate dateLivraisonReelle;
     private String etatLivraison;
 
-    //@OneToOne
-    //@JoinColumn(name = "commande_id", nullable = false)
-    //private Commande commande;
+    @OneToOne
+    @JoinColumn(name = "commande_id", nullable = false)
+    private Commande commande;
 }

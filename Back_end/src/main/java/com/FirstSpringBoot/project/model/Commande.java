@@ -36,8 +36,8 @@ public class Commande {
     @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL)
     private List<LigneCommande> lignes;
 
-    @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
-    private Livraison livraison;
+    //@OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
+    //private Livraison livraison;
 
     @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
     private Facture facture;
