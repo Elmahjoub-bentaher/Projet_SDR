@@ -49,17 +49,18 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
             .authorizeHttpRequests(authorize -> authorize
                 // Allow public access to authentication endpoints
+                .requestMatchers("/").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 // Require ADMIN role for admin-specific endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 // Require USER_STANDARD or ADMIN role for user-specific endpoints
-                .requestMatchers("/api/users/**").hasAnyRole("USER_STANDARD", "ADMIN")
-				.requestMatchers("/api/commandes/**").hasAnyRole("USER_STANDARD", "ADMIN")
-				.requestMatchers("/api/fournisseurs/**").hasAnyRole("USER_STANDARD", "ADMIN")
-				.requestMatchers("/api/utilisateurs/**").hasAnyRole("USER_STANDARD", "ADMIN")
-				.requestMatchers("/api/lignes-commandes/**").hasAnyRole("USER_STANDARD", "ADMIN")
-				.requestMatchers("/api/livraisons/**").hasAnyRole("USER_STANDARD", "ADMIN")
-				.requestMatchers("/api/factures/**").hasAnyRole("USER_STANDARD", "ADMIN")
+                .requestMatchers("/api/users/**").permitAll()
+				.requestMatchers("/api/commandes/**").permitAll()
+				.requestMatchers("/api/fournisseurs/**").permitAll()
+				.requestMatchers("/api/utilisateurs/**").permitAll()
+				.requestMatchers("/api/lignes-commandes/**").permitAll()
+				.requestMatchers("/api/livraisons/**").permitAll()
+				.requestMatchers("/api/factures/**").permitAll()
                 // All other requests must be authenticated
                 .anyRequest().authenticated()
             )
