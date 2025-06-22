@@ -63,32 +63,32 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /*@Bean
+    @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("*"); // Allow all origins (for development)
         configuration.addAllowedMethod("*"); // Allow all HTTP methods
         configuration.addAllowedHeader("*"); // Allow all headers
-        configuration.setAllowCredentials(false); // Set to true if using cookies/session with frontend
+        configuration.setAllowCredentials(true); // Set to true if using cookies/session with frontend
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }*/
+    }
 	
-	@Bean
-	public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-		String originFromEnv = dotenv.get("CORS_ALLOWED_ORIGIN", "http://localhost:3000");
-
-		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://localhost:3000", originFromEnv)); 
-		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-		config.setAllowedHeaders(List.of("*"));
-		config.setAllowCredentials(true); 
-
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", config);
-		return source;
-	}
+//	@Bean
+//	public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+//		String originFromEnv = dotenv.get("CORS_ALLOWED_ORIGIN", "http://localhost:3000");
+//
+//		CorsConfiguration config = new CorsConfiguration();
+//		config.setAllowedOrigins(List.of("http://localhost:3000", originFromEnv)); 
+//		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//		config.setAllowedHeaders(List.of("*"));
+//		config.setAllowCredentials(true); 
+//
+//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//		source.registerCorsConfiguration("/**", config);
+//		return source;
+//	}
 
 }
