@@ -13,6 +13,7 @@ import java.util.List;
 @RequestMapping("/api/products")
 //@CrossOrigin(origins = "http://localhost:4200")
 //@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
     private final ProductService productService;
 
