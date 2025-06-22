@@ -54,6 +54,12 @@ public class SecurityConfig {
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 // Require USER_STANDARD or ADMIN role for user-specific endpoints
                 .requestMatchers("/api/users/**").hasAnyRole("USER_STANDARD", "ADMIN")
+				.requestMatchers("/api/commandes/**").hasAnyRole("USER_STANDARD", "ADMIN")
+				.requestMatchers("/api/fournisseurs/**").hasAnyRole("USER_STANDARD", "ADMIN")
+				.requestMatchers("/api/utilisateurs/**").hasAnyRole("USER_STANDARD", "ADMIN")
+				.requestMatchers("/api/lignes-commandes/**").hasAnyRole("USER_STANDARD", "ADMIN")
+				.requestMatchers("/api/livraisons/**").hasAnyRole("USER_STANDARD", "ADMIN")
+				.requestMatchers("/api/factures/**").hasAnyRole("USER_STANDARD", "ADMIN")
                 // All other requests must be authenticated
                 .anyRequest().authenticated()
             )
