@@ -59,9 +59,8 @@ public class Utilisateur {
     @Column(nullable = false)
     private Role role; // Changed from String to Role enum
 
-    @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference(value = "utilisateur-commandes")
-    private List<Commande> commandes;
+    //@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, orphanRemoval = true)
+    //private List<Commande> commandes;
 
     // Note: If you don't have a 'Commande' entity, you can remove the 'commandes' field
     // and the @OneToMany annotation.

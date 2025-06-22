@@ -24,8 +24,7 @@ public class Fournisseur {
     private String siret;
     private String conditionsPaiement;
 
-    @OneToMany(mappedBy = "fournisseur")
-	@JsonManagedReference(value = "fournisseur-commandes")
-    private List<Commande> commandes;
+    //@OneToMany(mappedBy = "fournisseur")
+    //private List<Commande> commandes;
 }
 

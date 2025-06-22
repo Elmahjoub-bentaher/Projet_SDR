@@ -25,12 +25,10 @@ public class Commande {
 
     @ManyToOne
     @JoinColumn(name = "utilisateur_id")
-	@JsonBackReference(value = "utilisateur-commandes")
     private Utilisateur utilisateur;
 
     @ManyToOne
     @JoinColumn(name = "fournisseur_id")
-	@JsonBackReference(value = "fournisseur-commandes")
     private Fournisseur fournisseur;
 
     @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL)
