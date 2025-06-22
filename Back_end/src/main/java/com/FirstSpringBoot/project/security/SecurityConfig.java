@@ -66,7 +66,9 @@ public class SecurityConfig {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*"); // Allow all origins (for development)
+		String originFromEnv = dotenv.get("CORS_ALLOWED_ORIGIN", "http://localhost:3000");
+        configuration.addAllowedOrigin("http://localhost:3000"); // Allow all origins (for development)
+        configuration.addAllowedOrigin(originFromEnv); // Allow all origins (for development)
         configuration.addAllowedMethod("*"); // Allow all HTTP methods
         configuration.addAllowedHeader("*"); // Allow all headers
         configuration.setAllowCredentials(true); // Set to true if using cookies/session with frontend
