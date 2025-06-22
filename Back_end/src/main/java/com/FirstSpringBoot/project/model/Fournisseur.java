@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import org.springframework.core.annotation.Order;
 
+@Order(2)
 @Entity
 @Data
 @NoArgsConstructor
