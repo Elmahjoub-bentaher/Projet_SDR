@@ -10,7 +10,11 @@ RUN apk add --no-cache bash git
 WORKDIR /app
 
 # 2. Copy build configuration files (preserves layer caching)
-COPY gradlew gradle build.gradle settings.gradle ./
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+
 
 
 # Ensure gradlew is executable
