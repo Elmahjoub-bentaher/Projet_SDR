@@ -23,13 +23,13 @@ const Commandes = () => {
     : commandes.filter(c => c.idUtilisateur === currentUser?.idUtilisateur);
 
   const filteredCommandes = userCommandes.filter(commande => {
-    const fournisseur = fournisseurs.find(f => f.idFournisseur === commande.idFournisseur);
     const matchesSearch = commande.idCommande.toString().includes(searchTerm) ||
-                         fournisseur?.nom.toLowerCase().includes(searchTerm.toLowerCase());
+                          commande.fournisseur.nom.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filterStatus === 'tous' || commande.etat === filterStatus;
-    
+  
     return matchesSearch && matchesFilter;
   });
+
 
   const canEditCommande = (commande: any) => {
     return isAdmin || (commande.etat === 'En cours' && commande.idUtilisateur === currentUser?.idUtilisateur);
@@ -93,7 +93,7 @@ const Commandes = () => {
       {/* Liste des commandes */}
       <div className="grid gap-4">
         {filteredCommandes.map((commande) => {
-          const fournisseur = fournisseurs.find(f => f.idFournisseur === commande.idFournisseur);
+          const fournisseur = commande.fournisseur;
           
           return (
             <Card key={commande.idCommande} className="p-6 hover:shadow-md transition-shadow">
@@ -111,7 +111,7 @@ const Commandes = () => {
                   <div className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
                     <div>
                       <span className="text-slate-500">Fournisseur:</span>
-                      <p className="font-medium text-slate-900">{fournisseur?.nom}</p>
+                      <p className="font-medium text-slate-900">{commande.fournisseur.nom}</p>
                     </div>
                     <div>
                       <span className="text-slate-500">Date commande:</span>
