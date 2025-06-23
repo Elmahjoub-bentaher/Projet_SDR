@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -26,18 +29,24 @@ public class Commande {
 
     @ManyToOne
     @JoinColumn(name = "utilisateur_id")
+    @JsonIgnoreProperties({"commandes"})
     private Utilisateur utilisateur;
 
     @ManyToOne
     @JoinColumn(name = "fournisseur_id")
+    @JsonIgnoreProperties({"commandes"})
     private Fournisseur fournisseur;
 
     @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"commande"})
     private List<LigneCommande> lignes;
 
     //@OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
     //private Livraison livraison;
 
-    //@OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
-    //private Facture facture;
+
+    @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"commande"})
+    private Facture facture;
+
 }
