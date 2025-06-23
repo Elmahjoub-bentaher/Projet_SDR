@@ -132,6 +132,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: { 'Content-Type': 'application/json', credentials: "include", },
         body: JSON.stringify(commande),
       });
+      console.log("da", res.json());
+      
       if (res.ok) {
         const newCommande = await res.json();
         setCommandes(prev => [...prev, newCommande]);
