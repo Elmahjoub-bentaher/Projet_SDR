@@ -1,5 +1,6 @@
 package com.FirstSpringBoot.project.controller;
 
+import com.FirstSpringBoot.project.dto.FactureRequest;
 import com.FirstSpringBoot.project.model.Facture;
 import com.FirstSpringBoot.project.service.FactureService;
 import org.springframework.web.bind.annotation.*;
