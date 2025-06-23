@@ -1,6 +1,7 @@
 package com.FirstSpringBoot.project.service;
 
 import com.FirstSpringBoot.project.model.Facture;
+import com.FirstSpringBoot.project.repository.CommandeRepository;
 import com.FirstSpringBoot.project.repository.FactureRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
