@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 public class CommandeService {
@@ -53,7 +55,7 @@ public class CommandeService {
                         lc.setDescriptionArticle(ligne.getDescriptionArticle());
                         lc.setCommande(savedCommande);
                         return lc;
-                    }).toList();
+                    }).collect(Collectors.toList());
             
             ligneCommandeRepository.saveAll(lignes);
             savedCommande.setLignes(lignes);
