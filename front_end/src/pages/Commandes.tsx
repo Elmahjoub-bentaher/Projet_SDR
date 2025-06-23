@@ -117,7 +117,7 @@ const Commandes = () => {
                   <div className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
                     <div>
                       <span className="text-slate-500">Fournisseur:</span>
-                      <p className="font-medium text-slate-900">{commande.fournisseur.nom}</p>
+                      <p className="font-medium text-slate-900">{commande.fournisseur?.nom}</p>
                     </div>
                     <div>
                       <span className="text-slate-500">Date commande:</span>
