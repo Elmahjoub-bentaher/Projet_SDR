@@ -7,12 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Autowired
-private CommandeRepository commandeRepository;
 
 @Service
 @Transactional
 public class FactureService {
+	
+	@Autowired
+	private CommandeRepository commandeRepository;
+	
     private final FactureRepository repository;
 
     public FactureService(FactureRepository repository) {

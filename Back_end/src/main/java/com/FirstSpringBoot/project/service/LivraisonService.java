@@ -5,14 +5,15 @@ import com.FirstSpringBoot.project.repository.LivraisonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Autowired
-private CommandeRepository commandeRepository;
 
 import java.util.List;
 
 @Service
 @Transactional
 public class LivraisonService {
+	
+	@Autowired
+	private CommandeRepository commandeRepository;
 
     private final LivraisonRepository repository;
 
