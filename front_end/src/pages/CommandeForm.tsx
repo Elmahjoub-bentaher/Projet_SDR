@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
 import { useAuth } from '@/context/AuthContext';
@@ -16,50 +15,24 @@ const CommandeForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  //  useEffect(() => {
-  //   async function loadData() {
-  //     try {
-  //       setLoading(true);
-  //       const response = await fetch(`http://${window.location.hostname}:8080/api/fournisseurs`, {
-  //         credentials: 'include'
-  //       });
-        
-  //       if (!response.ok) throw new Error('Network response was not ok');
-        
-  //       const data = await response.json();
-  //       fournisseurs = data;
-  //     } catch (err) {
-  //       setError(err.message);
-  //       console.error('Fetch error:', err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   // Only fetch if empty
-  //   if (fournisseurs.length === 0) {
-  //     loadData();
-  //   }
-  // }, []);
-
-  // if (loading) return <div>Loading fournisseurs...</div>;
-  // if (error) return <div>Error: {error}</div>;
-  
   const [formData, setFormData] = useState<{
     dateCommande: string;
     dateLivraisonPrevue: string;
     montantTotal: number;
-    fournisseur: {};
+    idFournisseur: number;
     etat: 'En cours' | 'validée' | 'livrée';
+    lignes: {
+      descriptionArticle: string;
+      prixUnitaire: number;
+      quantite: number;
+    }[];
   }>({
     dateCommande: new Date().toISOString().split('T')[0],
     dateLivraisonPrevue: '',
     montantTotal: 0,
     idFournisseur: 0,
-    etat: 'En cours'
+    etat: 'En cours',
+    lignes: []
   });
 
   const isEditing = !!id;
@@ -71,21 +44,26 @@ const CommandeForm = () => {
         dateCommande: commande.dateCommande,
         dateLivraisonPrevue: commande.dateLivraisonPrevue,
         montantTotal: commande.montantTotal,
-        fournisseur: commande.fournisseur,
-        etat: commande.etat
+        idFournisseur: commande.idFournisseur,
+        etat: commande.etat,
+        lignes: commande.lignes || []
       });
     }
   }, [commande]);
 
+  const calculateTotal = () => {
+    return formData.lignes.reduce((sum, ligne) => sum + ligne.prixUnitaire * ligne.quantite, 0);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!currentUser) return;
-    console.log("user", currentUser);
-    
+
     const commandeData = {
       ...formData,
-    utilisateur: currentUser
+      montantTotal: calculateTotal(),
+      idUtilisateur: currentUser.idUtilisateur
     };
 
     if (isEditing && commande) {
@@ -101,7 +79,7 @@ const CommandeForm = () => {
         description: "La nouvelle commande a été créée avec succès.",
       });
     }
-    
+
     navigate('/commandes');
   };
 
@@ -111,7 +89,7 @@ const CommandeForm = () => {
         <h1 className="text-2xl font-bold mb-6">
           {isEditing ? 'Modifier la commande' : 'Nouvelle commande'}
         </h1>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -124,7 +102,7 @@ const CommandeForm = () => {
                 required
               />
             </div>
-            
+
             <div>
               <Label htmlFor="dateLivraisonPrevue">Date de livraison prévue</Label>
               <Input
@@ -136,13 +114,15 @@ const CommandeForm = () => {
               />
             </div>
           </div>
-          
+
           <div>
             <Label htmlFor="fournisseur">Fournisseur</Label>
             <select
               id="fournisseur"
               value={formData.idFournisseur}
-              onChange={(e) => setFormData({ ...formData, idFournisseur: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormData({ ...formData, idFournisseur: parseInt(e.target.value) })
+              }
               className="w-full px-3 py-2 border border-slate-200 rounded-md"
               required
             >
@@ -154,19 +134,70 @@ const CommandeForm = () => {
               ))}
             </select>
           </div>
-          
+
           <div>
-            <Label htmlFor="montantTotal">Montant total (€)</Label>
+            <Label>Articles</Label>
+            {formData.lignes.map((ligne, index) => (
+              <div key={index} className="grid grid-cols-3 gap-2 mb-2">
+                <Input
+                  placeholder="Article"
+                  value={ligne.descriptionArticle}
+                  onChange={(e) => {
+                    const updated = [...formData.lignes];
+                    updated[index].descriptionArticle = e.target.value;
+                    setFormData({ ...formData, lignes: updated });
+                  }}
+                />
+                <Input
+                  placeholder="Prix"
+                  type="number"
+                  value={ligne.prixUnitaire}
+                  onChange={(e) => {
+                    const updated = [...formData.lignes];
+                    updated[index].prixUnitaire = parseFloat(e.target.value);
+                    setFormData({ ...formData, lignes: updated });
+                  }}
+                />
+                <Input
+                  placeholder="Qté"
+                  type="number"
+                  value={ligne.quantite}
+                  onChange={(e) => {
+                    const updated = [...formData.lignes];
+                    updated[index].quantite = parseInt(e.target.value);
+                    setFormData({ ...formData, lignes: updated });
+                  }}
+                />
+              </div>
+            ))}
+
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() =>
+                setFormData({
+                  ...formData,
+                  lignes: [
+                    ...formData.lignes,
+                    { descriptionArticle: '', prixUnitaire: 0, quantite: 1 }
+                  ]
+                })
+              }
+            >
+              Ajouter un article
+            </Button>
+          </div>
+
+          <div>
+            <Label>Montant total calculé (€)</Label>
             <Input
-              id="montantTotal"
               type="number"
-              step="0.01"
-              value={formData.montantTotal}
-              onChange={(e) => setFormData({ ...formData, montantTotal: parseFloat(e.target.value) })}
-              required
+              readOnly
+              value={calculateTotal().toFixed(2)}
+              className="bg-gray-100"
             />
           </div>
-          
+
           <div className="flex gap-4">
             <Button type="submit" className="flex-1">
               {isEditing ? 'Modifier' : 'Créer'} la commande
@@ -182,4 +213,3 @@ const CommandeForm = () => {
 };
 
 export default CommandeForm;
-

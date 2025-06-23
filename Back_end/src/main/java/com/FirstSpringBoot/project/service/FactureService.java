@@ -1,31 +1,35 @@
 package com.FirstSpringBoot.project.service;
 
 import com.FirstSpringBoot.project.model.Facture;
+import com.FirstSpringBoot.project.model.Commande;
+import com.FirstSpringBoot.project.repository.CommandeRepository;
 import com.FirstSpringBoot.project.repository.FactureRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Autowired
-private CommandeRepository commandeRepository;
 
 @Service
 @Transactional
 public class FactureService {
+	
+	private final CommandeRepository commandeRepository;
+	
     private final FactureRepository repository;
 
-    public FactureService(FactureRepository repository) {
+    public FactureService(FactureRepository repository, CommandeRepository commandeRepository) {
         this.repository = repository;
+		this.commandeRepository = commandeRepository;
     }
 
     // CREATE
     public Facture create(Facture facture) {// Récupérer l'entité Commande de la base
-		Long commandeId = livraison.getCommande().getIdCommande();
+		Long commandeId = facture.getCommande().getIdCommande();
 		Commande commande = commandeRepository.findById(commandeId)
 			.orElseThrow(() -> new RuntimeException("Commande introuvable avec ID: " + commandeId));
 
-		livraison.setCommande(commande);
+		facture.setCommande(commande);
 		
         
         return repository.save(facture);

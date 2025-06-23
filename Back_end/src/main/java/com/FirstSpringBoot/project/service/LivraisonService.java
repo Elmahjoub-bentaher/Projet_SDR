@@ -1,23 +1,26 @@
 package com.FirstSpringBoot.project.service;
 
 import com.FirstSpringBoot.project.model.Livraison;
+import com.FirstSpringBoot.project.model.Commande;
+import com.FirstSpringBoot.project.repository.CommandeRepository;
 import com.FirstSpringBoot.project.repository.LivraisonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Autowired
-private CommandeRepository commandeRepository;
 
 import java.util.List;
 
 @Service
 @Transactional
 public class LivraisonService {
+	
+	private final CommandeRepository commandeRepository;
 
     private final LivraisonRepository repository;
 
-    public LivraisonService(LivraisonRepository repository) {
+    public LivraisonService(LivraisonRepository repository, CommandeRepository commandeRepository) {
         this.repository = repository;
+		this.commandeRepository = commandeRepository;
     }
 
     public Livraison create(Livraison livraison) {

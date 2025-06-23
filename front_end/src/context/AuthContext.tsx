@@ -51,6 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (response.ok) {
         // const data = await response.json();
         
+
         // // Temporary user object - should be replaced with actual user data from backend
         // const user: Utilisateur = {
         //   idUtilisateur: 0, // Should come from backend
@@ -60,6 +61,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         //   role: email.includes('admin') ? Role.ADMIN : Role.USER_STANDARD, // Temporary
         //   commandes: []
         // };
+
+        // Temporary user object - should be replaced with actual user data from backend
+        const user: Utilisateur = {
+          idUtilisateur: 1, // Should come from backend
+          nom: email.split('@')[0], // Temporary
+          email,
+          motDePasse: '', // Don't store password
+          role: email.includes('admin') ? Role.ADMIN : Role.USER_STANDARD, // Temporary
+          commandes: []
+        };
+
         
         // setCurrentUser(user);
         // localStorage.setItem('currentUser', JSON.stringify(user));

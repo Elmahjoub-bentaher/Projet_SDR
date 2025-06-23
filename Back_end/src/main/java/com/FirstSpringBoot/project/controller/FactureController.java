@@ -1,5 +1,7 @@
 package com.FirstSpringBoot.project.controller;
 
+import com.FirstSpringBoot.project.dto.FactureRequest;
+import com.FirstSpringBoot.project.model.Commande;
 import com.FirstSpringBoot.project.model.Facture;
 import com.FirstSpringBoot.project.service.FactureService;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +18,20 @@ public class FactureController {
     }
 
     @PostMapping
-    public Facture create(@RequestBody Facture facture) {
-        return service.create(facture);
-    }
+	public Facture create(@RequestBody FactureRequest req) {
+		Facture facture = new Facture();
+
+		facture.setNumeroFacture(req.getNumeroFacture());
+		facture.setMontant(req.getMontant().floatValue());  
+		facture.setDateEcheance(req.getDateEcheance());
+		facture.setEtatPaiement(req.getEtatPaiement());
+
+		Commande commande = new Commande();
+		commande.setIdCommande(req.getIdCommande());
+		facture.setCommande(commande);
+
+		return service.create(facture);
+	}
 
     @GetMapping
     public List<Facture> findAll() {
