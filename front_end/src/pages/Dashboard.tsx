@@ -120,7 +120,11 @@ const Dashboard = () => {
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[commande.etat]}`}>
                       {commande.etat}
                     </span>
-                    <p className="text-sm text-slate-600 mt-1">{commande.montantTotal.toLocaleString('fr-FR')} €</p>
+                    <p className="text-sm text-slate-600 mt-1">
+					  {commande.montantTotal != null
+						? `${commande.montantTotal.toLocaleString('fr-FR')} €`
+						: 'Non défini'}
+					</p>
                   </div>
                 </div>
               );
