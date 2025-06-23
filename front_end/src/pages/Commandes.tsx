@@ -134,8 +134,11 @@ const Commandes = () => {
                     <div>
                       <span className="text-slate-500">Montant total:</span>
                       <p className="font-medium text-slate-900">
-                        {commande.montantTotal.toLocaleString('fr-FR')} €
+                        {commande.montantTotal != null
+						? `${commande.montantTotal.toLocaleString('fr-FR')} €`
+						: 'Non défini'}
                       </p>
+					  
                     </div>
                   </div>
                 </div>
