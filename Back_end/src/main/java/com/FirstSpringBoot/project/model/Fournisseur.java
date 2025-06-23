@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -24,7 +26,8 @@ public class Fournisseur {
     private String siret;
     private String conditionsPaiement;
 
-    //@OneToMany(mappedBy = "fournisseur")
-    //private List<Commande> commandes;
+    @OneToMany(mappedBy = "fournisseur")
+	@JsonIgnoreProperties({"commandes"})
+    private List<Commande> commandes;
 }
 

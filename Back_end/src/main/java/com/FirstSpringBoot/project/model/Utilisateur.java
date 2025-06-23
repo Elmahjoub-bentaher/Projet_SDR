@@ -38,6 +38,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore; // Add this line
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "users") 
@@ -60,8 +61,9 @@ public class Utilisateur {
     @Column(nullable = false)
     private Role role; // Changed from String to Role enum
 
-    //@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<Commande> commandes;
+    @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnoreProperties({"commandes"})
+    private List<Commande> commandes;
 
     // Note: If you don't have a 'Commande' entity, you can remove the 'commandes' field
     // and the @OneToMany annotation.
