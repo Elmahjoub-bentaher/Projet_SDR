@@ -8,7 +8,7 @@ import { ShoppingCart, Users, Truck, FileText, TrendingUp, Clock } from 'lucide-
 const Dashboard = () => {
   const { commandes, fournisseurs, livraisons, factures } = useData();
 
-  const commandesEnAttente = commandes.filter(c => c.etat === 'en attente').length;
+  const commandesEnAttente = commandes.filter(c => c.etat === 'En cours').length;
   const commandesValidees = commandes.filter(c => c.etat === 'validée').length;
   const commandesLivrees = commandes.filter(c => c.etat === 'livrée').length;
   const montantTotal = commandes.reduce((total, c) => total + c.montantTotal, 0);
@@ -105,7 +105,7 @@ const Dashboard = () => {
             {recentCommandes.map((commande) => {
               const fournisseur = fournisseurs.find(f => f.idFournisseur === commande.idFournisseur);
               const statusColors = {
-                'en attente': 'bg-orange-100 text-orange-800',
+                'En cours': 'bg-orange-100 text-orange-800',
                 'validée': 'bg-blue-100 text-blue-800',
                 'livrée': 'bg-green-100 text-green-800'
               };

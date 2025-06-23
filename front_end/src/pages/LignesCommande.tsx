@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { useData } from '@/context/DataContext';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Package, Filter } from 'lucide-react';
+import { Search, Package } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -15,18 +14,18 @@ import {
 } from '@/components/ui/table';
 
 const LignesCommande = () => {
-  const { lignesCommande, commandes, fournisseurs } = useData();
+  const { lignesCommande } = useData();
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredLignes = lignesCommande.filter(ligne => {
-    const commande = commandes.find(c => c.idCommande === ligne.idCommande);
-    const fournisseur = commande ? fournisseurs.find(f => f.idFournisseur === commande.idFournisseur) : null;
-    
-    const matchesSearch = 
+    const commande = ligne.commande;
+    const fournisseur = commande ? commande.fournisseur : null;
+
+    const matchesSearch =
       ligne.descriptionArticle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ligne.idCommande.toString().includes(searchTerm) ||
+      (commande?.idCommande.toString().includes(searchTerm)) ||
       (fournisseur?.nom.toLowerCase().includes(searchTerm.toLowerCase()));
-    
+
     return matchesSearch;
   });
 
@@ -73,14 +72,15 @@ const LignesCommande = () => {
               </TableHeader>
               <TableBody>
                 {filteredLignes.map((ligne) => {
-                  const commande = commandes.find(c => c.idCommande === ligne.idCommande);
-                  const fournisseur = commande ? fournisseurs.find(f => f.idFournisseur === commande.idFournisseur) : null;
+                  const commande = ligne.commande;
+                  const fournisseur = commande ? commande.fournisseur : null;
                   const total = ligne.quantite * ligne.prixUnitaire;
 
                   const statusColors = {
-                    'en attente': 'bg-orange-100 text-orange-800 border-orange-200',
+                    'En cours': 'bg-orange-100 text-orange-800 border-orange-200',
                     'validée': 'bg-blue-100 text-blue-800 border-blue-200',
-                    'livrée': 'bg-green-100 text-green-800 border-green-200'
+                    'livrée': 'bg-green-100 text-green-800 border-green-200',
+                    'en cours': 'bg-yellow-100 text-yellow-800 border-yellow-200'
                   };
 
                   return (
@@ -97,16 +97,16 @@ const LignesCommande = () => {
                       <TableCell className="text-xs md:text-sm hidden sm:table-cell">{ligne.quantite}</TableCell>
                       <TableCell className="text-xs md:text-sm hidden md:table-cell">{ligne.prixUnitaire.toLocaleString('fr-FR')} €</TableCell>
                       <TableCell className="font-medium text-xs md:text-sm">{total.toLocaleString('fr-FR')} €</TableCell>
-                      <TableCell className="text-xs md:text-sm hidden lg:table-cell">#{ligne.idCommande}</TableCell>
+                      <TableCell className="text-xs md:text-sm hidden lg:table-cell">#{commande?.idCommande}</TableCell>
                       <TableCell className="text-xs md:text-sm hidden lg:table-cell">{fournisseur?.nom || 'N/A'}</TableCell>
                       <TableCell>
                         {commande && (
-                          <Badge className={`${statusColors[commande.etat]} text-xs`}>
+                          <Badge className={`${statusColors[commande.etat.toLowerCase()] || ''} text-xs`}>
                             {commande.etat}
                           </Badge>
                         )}
                         <div className="lg:hidden text-xs text-slate-500 mt-1">
-                          #{ligne.idCommande} | {fournisseur?.nom || 'N/A'}
+                          #{commande?.idCommande} | {fournisseur?.nom || 'N/A'}
                         </div>
                       </TableCell>
                     </TableRow>
