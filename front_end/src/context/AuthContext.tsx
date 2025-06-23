@@ -63,14 +63,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // };
 
         // Temporary user object - should be replaced with actual user data from backend
-        const user: Utilisateur = {
-          idUtilisateur: 1, // Should come from backend
-          nom: email.split('@')[0], // Temporary
-          email,
-          motDePasse: '', // Don't store password
-          role: email.includes('admin') ? Role.ADMIN : Role.USER_STANDARD, // Temporary
-          commandes: []
-        };
+        //const user: Utilisateur = {
+          //idUtilisateur: 1, // Should come from backend
+          //nom: email.split('@')[0], // Temporary
+          //email,
+          //motDePasse: '', // Don't store password
+          //role: email.includes('admin') ? Role.ADMIN : Role.USER_STANDARD, // Temporary
+          //commandes: []
+        //};
 
         
         // setCurrentUser(user);
