@@ -221,6 +221,22 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateLivraison = async (id: number, livraisonUpdate: Partial<Livraison>) => {
+    try {
+      const res = await fetch(`http://${window.location.hostname}:8080/api/livraisons/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', credentials: "include", },
+        body: JSON.stringify(livraisonUpdate),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setLivraisons(prev => prev.map(f => f.idLivraison === id ? updated : f));
+      }
+    } catch (error) {
+      console.error('Erreur mise à jour livraison :', error);
+    }
+  };
+
   const addFacture = async (facture: Omit<Facture, 'idFacture'>) => {
     try {
       const res = await fetch(`http://${window.location.hostname}:8080/api/factures`, {
@@ -251,7 +267,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateFournisseur,
       addLigneCommande,
       addLivraison,
-      addFacture
+      addFacture,
+      updateLivraison,
+      updateFacture
     }}>
       {children}
     </DataContext.Provider>

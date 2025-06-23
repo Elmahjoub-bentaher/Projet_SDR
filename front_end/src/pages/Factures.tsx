@@ -141,8 +141,8 @@ const Factures = () => {
 
       <div className="grid gap-4">
         {factures.map((facture) => {
-          const commande = commandes.find(c => c.idCommande === facture.idCommande);
-          const fournisseur = fournisseurs.find(f => f.idFournisseur === commande?.idFournisseur);
+          const commande = facture.commande;
+		  const fournisseur = commande?.fournisseur;
           
           return (
             <Card key={facture.idFacture} className="p-6">
