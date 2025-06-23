@@ -10,7 +10,7 @@ import { Plus, Truck, Edit } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Livraisons = () => {
-  const { commandes, livraisons, fournisseurs, addLivraison } = useData();
+  const { commandes, livraisons, fournisseurs, addLivraison, updateLivraison } = useData();
   const [showForm, setShowForm] = useState(false);
   const [editingLivraison, setEditingLivraison] = useState(null);
   const [formData, setFormData] = useState({
