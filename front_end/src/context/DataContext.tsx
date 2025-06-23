@@ -268,8 +268,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       addLigneCommande,
       addLivraison,
       addFacture,
-      updateLivraison,
-      updateFacture
+      updateLivraison
     }}>
       {children}
     </DataContext.Provider>
