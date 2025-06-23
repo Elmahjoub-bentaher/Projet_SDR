@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import org.springframework.core.annotation.Order;
 
-@Order(2)
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -26,7 +26,8 @@ public class Fournisseur {
     private String siret;
     private String conditionsPaiement;
 
-    //@OneToMany(mappedBy = "fournisseur")
-    //private List<Commande> commandes;
+    @OneToMany(mappedBy = "fournisseur")
+	@JsonIgnoreProperties({"commandes"})
+    private List<Commande> commandes;
 }
 

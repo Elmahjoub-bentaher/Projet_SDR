@@ -9,12 +9,13 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.core.annotation.Order;
 
-@Order(4)
 /**
  * CommandLineRunner to insert initial delivery data into the database on application startup.
  */
+import org.springframework.core.annotation.Order;
+
+@Order(4)
 @Component
 public class LivraisonDataLoader implements CommandLineRunner {
 

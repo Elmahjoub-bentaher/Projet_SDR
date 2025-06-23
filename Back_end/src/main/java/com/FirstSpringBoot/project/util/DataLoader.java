@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
  * CommandLineRunner to insert initial user data into the database on application startup.
  * This ensures that an admin and a standard user are available for testing/initial use.
  */
+import org.springframework.core.annotation.Order;
+
+@Order(2)
 @Component
 public class DataLoader implements CommandLineRunner {
 

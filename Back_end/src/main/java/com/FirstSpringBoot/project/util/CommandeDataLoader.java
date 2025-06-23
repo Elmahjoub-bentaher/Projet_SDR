@@ -15,6 +15,9 @@ import java.util.List;
 /**
  * Charge des commandes initiales si la base est vide.
  */
+import org.springframework.core.annotation.Order;
+
+@Order(3)
 @Component
 public class CommandeDataLoader implements CommandLineRunner {
 

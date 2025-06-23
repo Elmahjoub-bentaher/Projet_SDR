@@ -5,6 +5,9 @@ import com.FirstSpringBoot.project.repository.LivraisonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Autowired
+private CommandeRepository commandeRepository;
+
 import java.util.List;
 
 @Service
@@ -18,6 +21,13 @@ public class LivraisonService {
     }
 
     public Livraison create(Livraison livraison) {
+		// Récupérer l'entité Commande de la base
+		Long commandeId = livraison.getCommande().getIdCommande();
+		Commande commande = commandeRepository.findById(commandeId)
+			.orElseThrow(() -> new RuntimeException("Commande introuvable avec ID: " + commandeId));
+
+		livraison.setCommande(commande);
+		
         return repository.save(livraison);
     }
 
