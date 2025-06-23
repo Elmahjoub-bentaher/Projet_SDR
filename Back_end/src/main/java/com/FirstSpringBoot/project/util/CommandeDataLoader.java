@@ -46,7 +46,7 @@ public class CommandeDataLoader implements CommandLineRunner {
         Fournisseur f = fournisseurs.get(0);
         Utilisateur u = utilisateurs.get(0);
 
-        Commande c1 = createCommande(f, u, 1500f, "en attente");
+        Commande c1 = createCommande(f, u, 1500f, "En cours");
         Commande c2 = createCommande(f, u, 2000f, "validée");
         Commande c3 = createCommande(f, u, 1000f, "livrée");
 
