@@ -47,4 +47,5 @@ public class Commande {
     @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"commande"})
     private Facture facture;
+
 }

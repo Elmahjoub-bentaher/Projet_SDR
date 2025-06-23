@@ -52,7 +52,7 @@ const CommandeForm = () => {
     dateCommande: string;
     dateLivraisonPrevue: string;
     montantTotal: number;
-    idFournisseur: number;
+    fournisseur: {};
     etat: 'En cours' | 'validée' | 'livrée';
   }>({
     dateCommande: new Date().toISOString().split('T')[0],
@@ -71,7 +71,7 @@ const CommandeForm = () => {
         dateCommande: commande.dateCommande,
         dateLivraisonPrevue: commande.dateLivraisonPrevue,
         montantTotal: commande.montantTotal,
-        idFournisseur: commande.idFournisseur,
+        fournisseur: commande.fournisseur,
         etat: commande.etat
       });
     }
@@ -81,10 +81,11 @@ const CommandeForm = () => {
     e.preventDefault();
     
     if (!currentUser) return;
-
+    console.log("user", currentUser);
+    
     const commandeData = {
       ...formData,
-      idUtilisateur: currentUser.idUtilisateur
+    utilisateur: currentUser
     };
 
     if (isEditing && commande) {
@@ -181,3 +182,4 @@ const CommandeForm = () => {
 };
 
 export default CommandeForm;
+

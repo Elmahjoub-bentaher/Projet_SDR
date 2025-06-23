@@ -127,6 +127,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addCommande = async (commande: Omit<Commande, 'idCommande'>) => {
     try {
+      console.log('ca', commande);
+      
       const res = await fetch(`http://${window.location.hostname}:8080/api/commandes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', credentials: "include", },

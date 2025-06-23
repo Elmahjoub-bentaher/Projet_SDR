@@ -4,10 +4,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class CommandeRequest {
+    private LocalDate dateCommande;
     private LocalDate dateLivraisonPrevue;
     private String etat;
     private Long idFournisseur;
     private Long idUtilisateur;
+    
+    private Float montantTotal;
+
     private List<LigneCommandeRequest> lignes;
 
     // Getters and Setters
@@ -49,5 +53,21 @@ public class CommandeRequest {
 
     public void setLignes(List<LigneCommandeRequest> lignes) {
         this.lignes = lignes;
+    }
+
+        public LocalDate getDateCommande() {
+        return dateCommande;
+    }
+
+    public void setDateCommande(LocalDate dateCommande) {
+        this.dateCommande = dateCommande;
+    }
+
+    public Float getMontantTotal() {
+        return montantTotal;
+    }
+
+    public void setMontantTotal(Float montantTotal) {
+        this.montantTotal = montantTotal;
     }
 }
