@@ -12,7 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import org.springframework.core.annotation.Order;
 
+@Order(1)
 @Service
 public class AuthService {
 
@@ -64,7 +66,7 @@ public class AuthService {
                     user.setEmail(email);
                     user.setMotDePasse(passwordEncoder.encode(motDePasse)); // Encode password
                     user.setRole(role);
-                    user.setCommandes(null); // Or new ArrayList<>();
+                    //user.setCommandes(null); // Or new ArrayList<>();
                     return utilisateurRepository.save(user);
                 });
     }

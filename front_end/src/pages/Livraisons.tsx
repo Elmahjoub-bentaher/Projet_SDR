@@ -1,17 +1,18 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Truck } from 'lucide-react';
+import { Plus, Truck, Edit } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Livraisons = () => {
   const { commandes, livraisons, fournisseurs, addLivraison } = useData();
   const [showForm, setShowForm] = useState(false);
+  const [editingLivraison, setEditingLivraison] = useState(null);
   const [formData, setFormData] = useState({
     idCommande: 0,
     dateLivraisonReelle: new Date().toISOString().split('T')[0],
@@ -25,17 +26,38 @@ const Livraisons = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addLivraison(formData);
-    toast({
-      title: "Livraison enregistrée",
-      description: "La livraison a été enregistrée avec succès.",
-    });
+    if (editingLivraison) {
+      // mettre à jour la livraison
+      updateLivraison(editingLivraison.idLivraison, formData);
+      toast({
+        title: "Livraison mise à jour",
+        description: "La livraison a été modifiée avec succès.",
+      });
+    } else {
+      // ajouter une nouvelle livraison
+      addLivraison(formData);
+      toast({
+        title: "Livraison enregistrée",
+        description: "La livraison a été enregistrée avec succès.",
+      });
+    }
     setShowForm(false);
+    setEditingLivraison(null);
     setFormData({
       idCommande: 0,
       dateLivraisonReelle: new Date().toISOString().split('T')[0],
       etatLivraison: 'conforme'
     });
+  };
+  
+  const handleEditLivraison = (livraison) => {
+    setEditingLivraison(livraison);
+    setFormData({
+      idCommande: livraison.idCommande,
+      dateLivraisonReelle: livraison.dateLivraisonReelle.split('T')[0],
+      etatLivraison: livraison.etatLivraison
+    });
+    setShowForm(true);
   };
 
   const statusColors = {
@@ -59,7 +81,9 @@ const Livraisons = () => {
 
       {showForm && (
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Nouvelle livraison</h2>
+          <h2 className="text-xl font-semibold mb-4">
+		    {editingLivraison ? 'Modifier livraison' : 'Nouvelle livraison'}
+		  </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="commande">Commande</Label>
@@ -119,8 +143,8 @@ const Livraisons = () => {
 
       <div className="grid gap-4">
         {livraisons.map((livraison) => {
-          const commande = commandes.find(c => c.idCommande === livraison.idCommande);
-          const fournisseur = fournisseurs.find(f => f.idFournisseur === commande?.idFournisseur);
+          const commande = livraison.commande;
+		  const fournisseur = commande?.fournisseur;
           
           return (
             <Card key={livraison.idLivraison} className="p-6">
@@ -134,6 +158,12 @@ const Livraisons = () => {
                     <Badge className={statusColors[livraison.etatLivraison]}>
                       {livraison.etatLivraison}
                     </Badge>
+					
+					<Button variant="outline" size="sm" onClick={() => handleEditLivraison(livraison)}>
+					  <Edit className="w-4 h-4 mr-1" />
+					  Modifier
+					</Button>
+			  
                   </div>
                   
                   <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
@@ -151,7 +181,9 @@ const Livraisons = () => {
                         {new Date(livraison.dateLivraisonReelle).toLocaleDateString('fr-FR')}
                       </p>
                     </div>
+					
                   </div>
+				
                 </div>
               </div>
             </Card>

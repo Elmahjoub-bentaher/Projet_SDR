@@ -24,6 +24,6 @@ public class Facture {
     private String etatPaiement;
 
     @OneToOne
-    @JoinColumn(name = "commande_id")
+    @JoinColumn(name = "commande_id", nullable = false)
     private Commande commande;
 }

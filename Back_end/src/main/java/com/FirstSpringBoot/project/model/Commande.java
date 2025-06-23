@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.core.annotation.Order;
 
+@Order(3)
 @Entity
 @Data
 @NoArgsConstructor
@@ -35,8 +37,8 @@ public class Commande {
     @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL)
     private List<LigneCommande> lignes;
 
-    @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
-    private Livraison livraison;
+    //@OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
+    //private Livraison livraison;
 
     @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
     private Facture facture;

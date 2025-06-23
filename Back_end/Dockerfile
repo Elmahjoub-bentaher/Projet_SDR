@@ -14,13 +14,20 @@ COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
-COPY src src
+
+
 
 # Ensure gradlew is executable
 RUN chmod +x gradlew
 
+
 # 3. Build once (cache dependencies)
-RUN ./gradlew build --no-daemon || return 0
+RUN ./gradlew build -x test --no-daemon || return 0
+
+COPY src src
+
+RUN ./gradlew build -x test --no-daemon
+
 
 # 4. Continuous development command
 CMD ["./gradlew", "bootRun", "--continuous", "--no-daemon"]
