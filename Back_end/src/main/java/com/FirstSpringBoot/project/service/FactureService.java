@@ -25,11 +25,11 @@ public class FactureService {
 
     // CREATE
     public Facture create(Facture facture) {// Récupérer l'entité Commande de la base
-		Long commandeId = livraison.getCommande().getIdCommande();
+		Long commandeId = facture.getCommande().getIdCommande();
 		Commande commande = commandeRepository.findById(commandeId)
 			.orElseThrow(() -> new RuntimeException("Commande introuvable avec ID: " + commandeId));
 
-		livraison.setCommande(commande);
+		facture.setCommande(commande);
 		
         
         return repository.save(facture);
