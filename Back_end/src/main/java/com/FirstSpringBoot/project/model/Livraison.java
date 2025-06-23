@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import org.springframework.core.annotation.Order;
 
-@Order(4)
 @Entity
 @Data
 @NoArgsConstructor

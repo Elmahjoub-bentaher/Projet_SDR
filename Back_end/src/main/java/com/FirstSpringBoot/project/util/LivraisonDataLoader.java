@@ -13,6 +13,9 @@ import java.util.List;
 /**
  * CommandLineRunner to insert initial delivery data into the database on application startup.
  */
+import org.springframework.core.annotation.Order;
+
+@Order(4)
 @Component
 public class LivraisonDataLoader implements CommandLineRunner {
 

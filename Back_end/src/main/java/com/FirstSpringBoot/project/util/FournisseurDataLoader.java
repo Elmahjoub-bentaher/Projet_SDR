@@ -9,6 +9,9 @@ import java.util.List;
 /**
  * CommandLineRunner to insert initial supplier data into the database on application startup.
  */
+import org.springframework.core.annotation.Order;
+
+@Order(1)
 @Component
 public class FournisseurDataLoader implements CommandLineRunner {
 
