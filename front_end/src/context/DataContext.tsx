@@ -17,8 +17,6 @@ interface DataContextType {
   addFacture: (facture: Omit<Facture, 'idFacture'>) => void;
 }
 
-
-
 const DataContext = createContext<DataContextType | undefined>(undefined);
 export const useData = () => {
   const context = useContext(DataContext);
@@ -36,110 +34,50 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [factures, setFactures] = useState<Facture[]>([]);
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
 
-  // API fetch on mount
-  // useEffect(() => {
-  // const fetchData = async () => {
-  //   try {
-  //     const [
-  //       commandesRes,
-  //       fournisseursRes,
-  //       utilisateursRes,
-  //       lignesRes,
-  //       livraisonsRes,
-  //       facturesRes
-  //     ] =C
-  //       fetch(`http://${window.location.hostname}:8080/api/commandes`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
-	// 	fetch(`http://${window.location.hostname}:8080/api/fournisseurs`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
-	// 	fetch(`http://${window.location.hostname}:8080/api/utilisateurs`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
-	// 	fetch(`http://${window.location.hostname}:8080/api/lignes-commande`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
-	// 	fetch(`http://${window.location.hostname}:8080/api/livraisons`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", }),
-	// 	fetch(`http://${window.location.hostname}:8080/api/factures`, {method: "GET", headers: { "Content-Type": "application/json", }, credentials: "include", })
-  //     ]);
-
-  //     const [
-  //       commandesData,
-  //       fournisseursData,
-  //       utilisateursData,
-  //       lignesCommandeData,
-  //       livraisonsData,
-  //       facturesData
-  //     ] = await Promise.all([
-  //       commandesRes.json(),
-  //       fournisseursRes.json(),
-  //       utilisateursRes.json(),
-  //       lignesRes.json(),
-  //       livraisonsRes.json(),
-  //       facturesRes.json()
-  //     ]);
-      
-  //     setCommandes(Array.isArray(commandesData) ? commandesData : []);
-	//   setFournisseurs(Array.isArray(fournisseursData) ? fournisseursData : []);
-	//   setUtilisateurs(Array.isArray(utilisateursData) ? utilisateursData : []);
-	//   setLignesCommande(Array.isArray(lignesCommandeData) ? lignesCommandeData : []);
-	//   setLivraisons(Array.isArray(livraisonsData) ? livraisonsData : []);
-	//   setFactures(Array.isArray(facturesData) ? facturesData : []);
-    
-  //   } catch (error) {
-  //     console.error("Erreur lors du chargement des données:", error);
-  //   }
-  // };
-
-  // fetchData();
-  // }, []);
   useEffect(() => {
-  const fetchData = async () => {
-    // Define all endpoints and their corresponding state setters
-    const endpoints = [
-      { name: 'commandes', setter: setCommandes },
-      { name: 'fournisseurs', setter: setFournisseurs },
-      { name: 'utilisateurs', setter: setUtilisateurs },
-      { name: 'lignes-commande', setter: setLignesCommande },
-      { name: 'livraisons', setter: setLivraisons },
-      { name: 'factures', setter: setFactures },
-    ];
+    const fetchData = async () => {
+      const endpoints = [
+        { name: 'commandes', setter: setCommandes },
+        { name: 'fournisseurs', setter: setFournisseurs },
+        { name: 'utilisateurs', setter: setUtilisateurs },
+        { name: 'lignes-commande', setter: setLignesCommande },
+        { name: 'livraisons', setter: setLivraisons },
+        { name: 'factures', setter: setFactures },
+      ];
 
-    // Fetch data for each endpoint independently
-    endpoints.forEach(async ({ name, setter }) => {
-      try {
-        const res = await fetch(`http://${window.location.hostname}:8080/api/${name}`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-        });
+      endpoints.forEach(async ({ name, setter }) => {
+        try {
+          const res = await fetch(`http://${window.location.hostname}:8080/api/${name}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+          });
 
-        if (!res.ok) {
-          throw new Error(`Failed to fetch ${name}: ${res.status}`);
+          if (!res.ok) throw new Error(`Failed to fetch ${name}: ${res.status}`);
+          const data = await res.json();
+          setter(Array.isArray(data) ? data : []);
+        } catch (error) {
+          console.error(`Error fetching ${name}:`, error);
+          setter([]);
         }
+      });
+    };
 
-        const data = await res.json();
-        setter(Array.isArray(data) ? data : []); // Ensure data is always an array
-        console.log(`${name} data loaded:`, data); // Debug log
-      } catch (error) {
-        console.error(`Error fetching ${name}:`, error);
-        setter([]); // Set empty array on error
-      }
-    });
-  };
-
-  fetchData();
-}, []);
-
+    fetchData();
+  }, []);
 
   const addCommande = async (commande: Omit<Commande, 'idCommande'>) => {
     try {
-      console.log('ca', commande);
-      
       const res = await fetch(`http://${window.location.hostname}:8080/api/commandes`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', credentials: "include", },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(commande),
       });
-      console.log("da", res.json());
-      
-      if (res.ok) {
-        const newCommande = await res.json();
-        setCommandes(prev => [...prev, newCommande]);
-      }
+
+      const data = await res.json();
+      if (res.ok) setCommandes(prev => [...prev, data]);
+      else console.error('Erreur ajout commande (status):', res.status, data);
     } catch (error) {
       console.error('Erreur ajout commande :', error);
     }
@@ -149,12 +87,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`http://${window.location.hostname}:8080/api/commandes/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', credentials: "include", },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(commandeUpdate),
       });
+
+      const updated = await res.json();
       if (res.ok) {
-        const updated = await res.json();
         setCommandes(prev => prev.map(c => c.idCommande === id ? updated : c));
+      } else {
+        console.error('Erreur mise à jour commande (status):', res.status, updated);
       }
     } catch (error) {
       console.error('Erreur mise à jour commande :', error);
@@ -165,13 +107,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`http://${window.location.hostname}:8080/api/fournisseurs`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', credentials: "include", },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(fournisseur),
       });
-      if (res.ok) {
-        const newFournisseur = await res.json();
-        setFournisseurs(prev => [...prev, newFournisseur]);
-      }
+
+      const data = await res.json();
+      if (res.ok) setFournisseurs(prev => [...prev, data]);
+      else console.error('Erreur ajout fournisseur (status):', res.status, data);
     } catch (error) {
       console.error('Erreur ajout fournisseur :', error);
     }
@@ -181,12 +124,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`http://${window.location.hostname}:8080/api/fournisseurs/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', credentials: "include", },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(fournisseurUpdate),
       });
+
+      const updated = await res.json();
       if (res.ok) {
-        const updated = await res.json();
         setFournisseurs(prev => prev.map(f => f.idFournisseur === id ? updated : f));
+      } else {
+        console.error('Erreur mise à jour fournisseur (status):', res.status, updated);
       }
     } catch (error) {
       console.error('Erreur mise à jour fournisseur :', error);
@@ -197,13 +144,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`http://${window.location.hostname}:8080/api/lignes-commande`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', credentials: "include", },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(ligne),
       });
-      if (res.ok) {
-        const newLigne = await res.json();
-        setLignesCommande(prev => [...prev, newLigne]);
-      }
+
+      const data = await res.json();
+      if (res.ok) setLignesCommande(prev => [...prev, data]);
+      else console.error('Erreur ajout ligne commande (status):', res.status, data);
     } catch (error) {
       console.error('Erreur ajout ligne commande :', error);
     }
@@ -213,13 +161,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`http://${window.location.hostname}:8080/api/livraisons`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', credentials: "include", },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(livraison),
       });
-      if (res.ok) {
-        const newLivraison = await res.json();
-        setLivraisons(prev => [...prev, newLivraison]);
-      }
+
+      const data = await res.json();
+      if (res.ok) setLivraisons(prev => [...prev, data]);
+      else console.error('Erreur ajout livraison (status):', res.status, data);
     } catch (error) {
       console.error('Erreur ajout livraison :', error);
     }
@@ -229,12 +178,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`http://${window.location.hostname}:8080/api/livraisons/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', credentials: "include", },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(livraisonUpdate),
       });
+
+      const updated = await res.json();
       if (res.ok) {
-        const updated = await res.json();
         setLivraisons(prev => prev.map(f => f.idLivraison === id ? updated : f));
+      } else {
+        console.error('Erreur mise à jour livraison (status):', res.status, updated);
       }
     } catch (error) {
       console.error('Erreur mise à jour livraison :', error);
@@ -245,13 +198,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`http://${window.location.hostname}:8080/api/factures`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', credentials: "include", },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(facture),
       });
-      if (res.ok) {
-        const newFacture = await res.json();
-        setFactures(prev => [...prev, newFacture]);
-      }
+
+      const data = await res.json();
+      if (res.ok) setFactures(prev => [...prev, data]);
+      else console.error('Erreur ajout facture (status):', res.status, data);
     } catch (error) {
       console.error('Erreur ajout facture :', error);
     }
