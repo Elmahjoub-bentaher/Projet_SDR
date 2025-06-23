@@ -58,7 +58,7 @@ public class SecurityConfig {
 				.requestMatchers("/api/commandes/**").permitAll()
 				.requestMatchers("/api/fournisseurs/**").permitAll()
 				.requestMatchers("/api/utilisateurs/**").permitAll()
-				.requestMatchers("/api/lignes-commandes/**").permitAll()
+				.requestMatchers("/api/lignes-commande/**").permitAll()
 				.requestMatchers("/api/livraisons/**").permitAll()
 				.requestMatchers("/api/factures/**").permitAll()
                 // All other requests must be authenticated
