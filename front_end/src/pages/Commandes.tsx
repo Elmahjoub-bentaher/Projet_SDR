@@ -30,7 +30,7 @@ const Commandes = () => {
   });
 
   const canEditCommande = (commande: any) => {
-    return isAdmin || (commande.etat === 'en attente' && commande.idUtilisateur === currentUser?.idUtilisateur);
+    return isAdmin || (commande.etat === 'En cours' && commande.idUtilisateur === currentUser?.idUtilisateur);
   };
 
   const handleConfirmerCommande = (commande: any) => {
@@ -40,7 +40,7 @@ const Commandes = () => {
   };
 
   const statusColors = {
-    'en attente': 'bg-orange-100 text-orange-800 border-orange-200',
+    'En cours': 'bg-orange-100 text-orange-800 border-orange-200',
     'validée': 'bg-blue-100 text-blue-800 border-blue-200',
     'livrée': 'bg-green-100 text-green-800 border-green-200'
   };
@@ -80,7 +80,7 @@ const Commandes = () => {
               className="px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="tous">Tous les états</option>
-              <option value="en attente">En attente</option>
+              <option value="En cours">En cours</option>
               <option value="validée">Validée</option>
               <option value="livrée">Livrée</option>
             </select>
@@ -141,7 +141,7 @@ const Commandes = () => {
                       </Button>
                     </Link>
                   )}
-                  {isAdmin && commande.etat === 'en attente' && (
+                  {isAdmin && commande.etat === 'En cours' && (
                     <Button 
                       size="sm" 
                       onClick={() => handleConfirmerCommande(commande)}

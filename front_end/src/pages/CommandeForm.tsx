@@ -15,19 +15,51 @@ const CommandeForm = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  //  useEffect(() => {
+  //   async function loadData() {
+  //     try {
+  //       setLoading(true);
+  //       const response = await fetch(`http://${window.location.hostname}:8080/api/fournisseurs`, {
+  //         credentials: 'include'
+  //       });
+        
+  //       if (!response.ok) throw new Error('Network response was not ok');
+        
+  //       const data = await response.json();
+  //       fournisseurs = data;
+  //     } catch (err) {
+  //       setError(err.message);
+  //       console.error('Fetch error:', err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   // Only fetch if empty
+  //   if (fournisseurs.length === 0) {
+  //     loadData();
+  //   }
+  // }, []);
+
+  // if (loading) return <div>Loading fournisseurs...</div>;
+  // if (error) return <div>Error: {error}</div>;
   
   const [formData, setFormData] = useState<{
     dateCommande: string;
     dateLivraisonPrevue: string;
     montantTotal: number;
     idFournisseur: number;
-    etat: 'en attente' | 'validée' | 'livrée';
+    etat: 'En cours' | 'validée' | 'livrée';
   }>({
     dateCommande: new Date().toISOString().split('T')[0],
     dateLivraisonPrevue: '',
     montantTotal: 0,
     idFournisseur: 0,
-    etat: 'en attente'
+    etat: 'En cours'
   });
 
   const isEditing = !!id;
