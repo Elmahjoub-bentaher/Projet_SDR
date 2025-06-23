@@ -12,13 +12,13 @@ import java.util.List;
 @Transactional
 public class LivraisonService {
 	
-	@Autowired
-	private CommandeRepository commandeRepository;
+	private final CommandeRepository commandeRepository;
 
     private final LivraisonRepository repository;
 
-    public LivraisonService(LivraisonRepository repository) {
+    public LivraisonService(LivraisonRepository repository, CommandeRepository commandeRepository) {
         this.repository = repository;
+		this.commandeRepository = commandeRepository;
     }
 
     public Livraison create(Livraison livraison) {

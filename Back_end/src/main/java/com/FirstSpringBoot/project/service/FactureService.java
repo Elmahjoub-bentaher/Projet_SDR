@@ -12,13 +12,13 @@ import java.util.List;
 @Transactional
 public class FactureService {
 	
-	@Autowired
-	private CommandeRepository commandeRepository;
+	private final CommandeRepository commandeRepository;
 	
     private final FactureRepository repository;
 
-    public FactureService(FactureRepository repository) {
+    public FactureService(FactureRepository repository, CommandeRepository commandeRepository) {
         this.repository = repository;
+		this.commandeRepository = commandeRepository;
     }
 
     // CREATE
