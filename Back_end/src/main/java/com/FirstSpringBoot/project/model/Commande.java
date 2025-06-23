@@ -38,6 +38,6 @@ public class Commande {
     //@OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
     //private Livraison livraison;
 
-    @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
-    private Facture facture;
+    //@OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
+    //private Facture facture;
 }
