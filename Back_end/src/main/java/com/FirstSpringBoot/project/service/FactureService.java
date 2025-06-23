@@ -7,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Autowired
+private CommandeRepository commandeRepository;
+
 @Service
 @Transactional
 public class FactureService {
@@ -17,7 +20,14 @@ public class FactureService {
     }
 
     // CREATE
-    public Facture create(Facture facture) {
+    public Facture create(Facture facture) {// Récupérer l'entité Commande de la base
+		Long commandeId = livraison.getCommande().getIdCommande();
+		Commande commande = commandeRepository.findById(commandeId)
+			.orElseThrow(() -> new RuntimeException("Commande introuvable avec ID: " + commandeId));
+
+		livraison.setCommande(commande);
+		
+        
         return repository.save(facture);
     }
 
