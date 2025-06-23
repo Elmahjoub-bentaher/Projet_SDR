@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
 import { useAuth } from '@/context/AuthContext';
 import { Card } from '@/components/ui/card';
@@ -15,12 +15,18 @@ const Commandes = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('tous');
 
+  console.log("auth", isAdmin);
+  
   
 
   // Filtrer les commandes selon le rôle
+  
   const userCommandes = isAdmin 
     ? commandes 
-    : commandes.filter(c => c.idUtilisateur === currentUser?.idUtilisateur);
+    : commandes.filter(c => c.utilisateur?.idUtilisateur === currentUser?.idUtilisateur);
+  console.log('cm', userCommandes);
+
+  
 
   const filteredCommandes = userCommandes.filter(commande => {
     const matchesSearch = commande.idCommande.toString().includes(searchTerm) ||

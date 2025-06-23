@@ -49,8 +49,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (response.ok) {
-        const data = await response.json();
+        // const data = await response.json();
         
+
+        // // Temporary user object - should be replaced with actual user data from backend
+        // const user: Utilisateur = {
+        //   idUtilisateur: 0, // Should come from backend
+        //   nom: email.split('@')[0], // Temporary
+        //   email,
+        //   motDePasse: '', // Don't store password
+        //   role: email.includes('admin') ? Role.ADMIN : Role.USER_STANDARD, // Temporary
+        //   commandes: []
+        // };
+
         // Temporary user object - should be replaced with actual user data from backend
         const user: Utilisateur = {
           idUtilisateur: 1, // Should come from backend
@@ -60,7 +71,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           role: email.includes('admin') ? Role.ADMIN : Role.USER_STANDARD, // Temporary
           commandes: []
         };
+
         
+        // setCurrentUser(user);
+        // localStorage.setItem('currentUser', JSON.stringify(user));
+         const data = await response.json();
+
+        const userResponse = await fetch(`http://${window.location.hostname}:8080/api/utilisateurs/by-email/${encodeURIComponent(email)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+        
+         if (!userResponse.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+
+        // 4. Get the real user data from backend
+        const user: Utilisateur = await userResponse.json();
+
+        // 5. Store user and token
         setCurrentUser(user);
         localStorage.setItem('currentUser', JSON.stringify(user));
         return true;
