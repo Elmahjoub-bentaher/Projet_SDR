@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.core.annotation.Order;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@Order(3)
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -43,6 +43,7 @@ public class Commande {
 
     //@OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
     //private Livraison livraison;
+
 
     @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"commande"})
