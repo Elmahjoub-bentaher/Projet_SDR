@@ -16,9 +16,20 @@ public class FactureController {
     }
 
     @PostMapping
-    public Facture create(@RequestBody Facture facture) {
-        return service.create(facture);
-    }
+	public Facture create(@RequestBody FactureRequest req) {
+		Facture facture = new Facture();
+
+		facture.setNumeroFacture(req.getNumeroFacture());
+		facture.setMontant(req.getMontant().floatValue());  
+		facture.setDateEcheance(req.getDateEcheance());
+		facture.setEtatPaiement(req.getEtatPaiement());
+
+		Commande commande = new Commande();
+		commande.setIdCommande(req.getIdCommande());
+		facture.setCommande(commande);
+
+		return service.create(facture);
+	}
 
     @GetMapping
     public List<Facture> findAll() {
